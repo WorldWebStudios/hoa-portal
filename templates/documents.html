@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Documents{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">HOA Document Center</h1>
+  <a href="/" class="btn btn-outline-secondary mb-4">← Back to Dashboard</a>
+
+  <!-- 🔍 Search & Filter Form -->
+  <form method="get" action="{{ url_for('documents') }}" class="mb-4 d-flex gap-2 flex-wrap">
+    <input type="text" name="search" class="form-control" style="max-width: 300px;"
+           placeholder="Search filename..." value="{{ request.args.get('search', '') }}">
+
+    <select name="category" class="form-select" style="max-width: 200px;">
+      <option value="">All Categories</option>
+      {% for cat in all_categories %}
+        <option value="{{ cat }}" {% if cat == request.args.get('category') %}selected{% endif %}>
+          {{ cat.replace('_', ' ').title() }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-primary">Filter</button>
+  </form>
+
+  <!-- 📄 Document Listings -->
+  {% for category, files in docs.items() %}
+    <div class="mb-5">
+      <h4>{{ category.replace('_', ' ').title() }}</h4>
+      {% if files %}
+        <ul class="list-group">
+          {% for doc in files %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <a href="{{ url_for('download_file', category=doc.category, filename=doc.filename) }}">
+                     {{ doc.filename }}
+                </a>
+                {% if doc.mimetype.startswith('image/') or doc.mimetype == 'application/pdf' %}
+                    |
+                    <a href="{{ url_for('preview_file', category=doc.category, filename=doc.filename) }}" class="text-primary" target="_blank">
+                        Preview
+                    </a>
+                {% endif %}
+                <br>
+                <small class="text-muted d-block">
+                    Uploaded by {{ doc.uploader.username }} on {{ doc.uploaded_at.strftime('%Y-%m-%d %H:%M') }}
+                </small>
+                {% if doc.notes %}
+                    <small class="text-secondary d-block">
+                        📝 {{ doc.notes }}
+                    </small>
+                {% endif %}
+                <small class="text-secondary">
+                    📦 {{ (doc.filesize / 1024)|round(1) }} KB
+                </small>
+              </div>
+              {% if user.is_admin %}
+                <form method="POST" action="{{ url_for('delete_file', category=doc.category, filename=doc.filename) }}" style="margin: 0;">
+                  <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No documents in this category yet.</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  <!-- 🔁 Pagination Controls -->
+  {% if pagination.pages > 1 %}
+    <nav>
+      <ul class="pagination justify-content-center">
+        {% if pagination.has_prev %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('documents', page=pagination.prev_num, search=request.args.get('search'), category=request.args.get('category')) }}">
+              Previous
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+
+        <li class="page-item disabled">
+          <span class="page-link">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+        </li>
+
+        {% if pagination.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('documents', page=pagination.next_num, search=request.args.get('search'), category=request.args.get('category')) }}">
+              Next
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+{% endblock %}
+
+
+

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Pending User Approvals</h2>
+{% if users %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Email</th><th>Unit #</th><th>Assign Role</th></tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+      <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.unit_number }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('approve_user', user_id=user.id) }}">
+            <select name="role" required>
+              <option disabled selected>Select Role</option>
+              <option value="admin">Admin</option>
+              <option value="board">Board Member</option>
+              <option value="owner">Owner</option>
+              <option value="renter">Renter</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
+            <button type="submit">Assign</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No users pending approval.</p>
+{% endif %}
+{% endblock %}

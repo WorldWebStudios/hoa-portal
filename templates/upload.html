@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Document{% endblock %}
+
+{% block content %}
+  <h2 class="mb-4">Upload a Document</h2>
+
+  <form method="post" enctype="multipart/form-data">
+  <label>Category:</label>
+  <select name="category" class="form-select" required>
+    <option value="governing_documents">Governing Documents</option>
+    <option value="minutes">Meeting Minutes</option>
+    <option value="budgets">Budgets & Financials</option>
+    <option value="insurance">Insurance Policies</option>
+    <option value="contracts">Contracts</option>
+    <option value="architecture">Architectural Reviews</option>
+    <option value="general">Other</option>
+  </select>
+
+  <label class="mt-3">Notes (applied to all files):</label>
+  <textarea name="notes" class="form-control" rows="2"></textarea>
+
+  <label class="mt-3">Select Files:</label>
+  <input type="file" name="files" multiple required class="form-control">
+
+  <button type="submit" class="btn btn-primary mt-4">Upload</button>
+</form>
+{% endblock %}

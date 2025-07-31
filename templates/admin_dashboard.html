@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">📊 Admin Dashboard</h1>
+  <a href="/" class="btn btn-outline-secondary mb-4">← Back to Dashboard</a>
+
+  <form method="get" class="row g-3 align-items-end mb-4">
+  <div class="col-md-3">
+    <label class="form-label">Start Date</label>
+    <input type="date" name="start" value="{{ selected_start }}" class="form-control">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">End Date</label>
+    <input type="date" name="end" value="{{ selected_end }}" class="form-control">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Uploader</label>
+    <select name="uploader" class="form-select">
+      <option value="">All</option>
+      {% for name in all_usernames %}
+        <option value="{{ name }}" {% if name == selected_user %}selected{% endif %}>{{ name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-3">
+    <button type="submit" class="btn btn-primary">Filter</button>
+  </div>
+</form>
+
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h5>Total Documents</h5>
+        <p class="display-6">{{ total_docs }}</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h5>Total Users</h5>
+        <p class="display-6">{{ total_users }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <h4>📂 Documents by Category</h4>
+    <ul class="list-group">
+      {% for cat, count in category_counts %}
+        <li class="list-group-item d-flex justify-content-between">
+          {{ cat.replace('_', ' ').title() }}
+          <span class="badge bg-primary rounded-pill">{{ count }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="mb-4">
+    <h4>🕓 Recent Uploads</h4>
+    <ul class="list-group">
+      {% for doc in recent_docs %}
+        <li class="list-group-item">
+          <strong>{{ doc.filename }}</strong>
+          <br>
+          <small>Uploaded by {{ doc.uploader.username }} on {{ doc.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</small>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

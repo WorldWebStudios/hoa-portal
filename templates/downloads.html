@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Download Logs{% endblock %}
+{% block content %}
+  <h2>Download Logs</h2>
+  <a href="/" class="btn btn-sm btn-secondary mb-3">← Back to Dashboard</a>
+
+  {% if logs %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Document</th>
+          <th>Category</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+          <tr>
+            <td>{{ log.user.username }}</td>
+            <td>{{ log.document.filename }}</td>
+            <td>{{ log.document.category }}</td>
+            <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No downloads recorded yet.</p>
+  {% endif %}
+{% endblock %}

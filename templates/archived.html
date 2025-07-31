@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Archived Documents{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">🗃️ Archived Documents</h1>
+  <a href="{{ url_for('documents') }}" class="btn btn-outline-secondary mb-4">← Back to Active Documents</a>
+
+  {% if docs %}
+    {% for category, files in docs.items() %}
+      <div class="mb-5">
+        <h4>{{ category.replace('_', ' ').title() }}</h4>
+        {% if files %}
+          <ul class="list-group">
+            {% for doc in files %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ doc.filename }}</strong><br>
+                  <small class="text-muted">
+                    Uploaded by {{ doc.uploader.username }} on {{ doc.uploaded_at.strftime('%Y-%m-%d %H:%M') }}
+                  </small><br>
+                  {% if doc.notes %}
+                    <em class="text-muted">Notes: {{ doc.notes }}</em>
+                  {% endif %}
+                </div>
+                <form method="POST" action="{{ url_for('restore_file', doc_id=doc.id) }}">
+                  <button type="submit" class="btn btn-sm btn-success">Restore</button>
+                </form>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No archived documents in this category.</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No archived documents found.</p>
+  {% endif %}
+{% endblock %}

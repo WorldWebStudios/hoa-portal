@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+  <h1 class="mb-3">Welcome, {{ user.username }}!</h1>
+
+  {% if user.is_admin %}
+    <p class="text-success">[Admin Access]</p>
+  {% else %}
+    <p class="text-muted">[User Access]</p>
+  {% endif %}
+
+  <p class="mb-4">This is your secure HOA dashboard.</p>
+
+  <div class="d-flex gap-2">
+    {% if user.is_admin %}
+      <a href="/upload" class="btn btn-outline-primary">Upload a Document</a>
+    {% endif %}
+    <a href="/documents" class="btn btn-outline-secondary">View Documents</a>
+    <a href="/logout" class="btn btn-danger">Log out</a>
+  </div>
+{% endblock %}
+
+
