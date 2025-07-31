@@ -5,6 +5,7 @@ from forms import RegistrationForm
 from app import app
 from flask_migrate import upgrade
 from flask import Blueprint
+from flask_login import login_required, current_user
 
 admin_util = Blueprint('admin_util', __name__)
 
