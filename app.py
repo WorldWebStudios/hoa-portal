@@ -8,6 +8,8 @@ from models import db, User, Document, DownloadLog
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'  # 🔒 Replace in production
+from routes import admin_util
+app.register_blueprint(admin_util)
 
 # Database config
 basedir = os.path.abspath(os.path.dirname(__file__))

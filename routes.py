@@ -3,7 +3,18 @@ from werkzeug.security import generate_password_hash
 from models import db, User
 from forms import RegistrationForm
 from app import app
+from flask_migrate import upgrade
+from flask import Blueprint
 
+admin_util = Blueprint('admin_util', __name__)
+
+@admin_util.route('/init-db')
+def init_db():
+    try:
+        upgrade()
+        return "✅ Database migrated successfully!"
+    except Exception as e:
+        return f"❌ Migration failed: {str(e)}"
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
