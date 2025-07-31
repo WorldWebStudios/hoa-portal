@@ -272,6 +272,10 @@ def admin_dashboard():
                            selected_end=end_date,
                            selected_user=uploader)
 
+import routes  # ✅ Registers all routes from routes.py
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 # Run server
 if __name__ == '__main__':
