@@ -1,9 +1,9 @@
-from flask import render_template, redirect, url_for, flash, request
 from werkzeug.security import generate_password_hash
-from models import db, User
 from forms import RegistrationForm
 from app import app
+from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
+from models import db, User
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -35,23 +35,35 @@ def admin_approvals():
     pending_users = User.query.filter_by(role='Pending').all()
     return render_template('approve_users.html', users=pending_users)
 
+@app.route('/admin/approvals')
+@login_required
+def admin_approvals():
+    if not (current_user.is_admin or current_user.role == 'Board'):
+        flash("Access denied.", "danger")
+        return redirect(url_for('dashboard'))
+
+    pending_users = User.query.filter_by(role='Pending').all()
+    return render_template('approve_users.html', users=pending_users)
+
 @app.route('/admin/approve_user/<int:user_id>', methods=['POST'])
 @login_required
 def approve_user(user_id):
-    if not current_user.is_admin and not current_user.is_board:
+    if not (current_user.is_admin or current_user.role == 'Board'):
         flash("Access denied.", "danger")
-        return redirect(url_for('index'))
+        return redirect(url_for('dashboard'))
 
     user = User.query.get_or_404(user_id)
     new_role = request.form.get('role')
 
-    if new_role not in ['admin', 'board', 'owner', 'renter', 'maintenance']:
+    valid_roles = ['Admin', 'Board', 'Owner', 'Renter', 'Maintenance']
+    if new_role not in valid_roles:
         flash("Invalid role selected.", "danger")
         return redirect(url_for('admin_approvals'))
 
     user.role = new_role
+    user.is_admin = (new_role == 'Admin')
     db.session.commit()
-    flash(f"{user.name} has been updated to role: {new_role}.", "success")
+    flash(f"{user.name} approved as {new_role}.", "success")
     return redirect(url_for('admin_approvals'))
 
 
