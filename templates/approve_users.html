@@ -1,35 +1,45 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
 <h2>Pending User Approvals</h2>
+
 {% if users %}
-  <table>
+<table border="1" cellpadding="5">
     <thead>
-      <tr><th>Name</th><th>Email</th><th>Unit #</th><th>Assign Role</th></tr>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Unit</th>
+            <th>Phone</th>
+            <th>Assign Role</th>
+            <th>Action</th>
+        </tr>
     </thead>
     <tbody>
-    {% for user in users %}
-      <tr>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.unit_number }}</td>
-        <td>
-          <form method="POST" action="{{ url_for('approve_user', user_id=user.id) }}">
-            <select name="role" required>
-              <option disabled selected>Select Role</option>
-              <option value="admin">Admin</option>
-              <option value="board">Board Member</option>
-              <option value="owner">Owner</option>
-              <option value="renter">Renter</option>
-              <option value="maintenance">Maintenance</option>
-            </select>
-            <button type="submit">Assign</button>
-          </form>
-        </td>
-      </tr>
-    {% endfor %}
+        {% for user in users %}
+        <tr>
+            <form method="POST" action="{{ url_for('approve_user', user_id=user.id) }}">
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.unit_number }}</td>
+                <td>{{ user.phone_number }}</td>
+                <td>
+                    <select name="role" required>
+                        <option value="">--Select--</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Board">Board</option>
+                        <option value="Owner">Owner</option>
+                        <option value="Renter">Renter</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </td>
+                <td><button type="submit">Approve</button></td>
+            </form>
+        </tr>
+        {% endfor %}
     </tbody>
-  </table>
+</table>
 {% else %}
-  <p>No users pending approval.</p>
+<p>No users are waiting for approval.</p>
 {% endif %}
+
 {% endblock %}
