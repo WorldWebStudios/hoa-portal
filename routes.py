@@ -35,16 +35,6 @@ def admin_approvals():
     pending_users = User.query.filter_by(role='Pending').all()
     return render_template('approve_users.html', users=pending_users)
 
-@app.route('/admin/approvals')
-@login_required
-def admin_approvals():
-    if not (current_user.is_admin or current_user.role == 'Board'):
-        flash("Access denied.", "danger")
-        return redirect(url_for('dashboard'))
-
-    pending_users = User.query.filter_by(role='Pending').all()
-    return render_template('approve_users.html', users=pending_users)
-
 @app.route('/admin/approve_user/<int:user_id>', methods=['POST'])
 @login_required
 def approve_user(user_id):
