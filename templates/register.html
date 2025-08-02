@@ -1,12 +1,47 @@
-<form method="POST">
-  {{ form.hidden_tag() }}
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+  <h2 class="mb-4">Register</h2>
+  <form method="POST" novalidate>
+    {{ form.hidden_tag() }}
 
-  <div>{{ form.username.label }} {{ form.username() }}</div>
-  <div>{{ form.password.label }} {{ form.password() }}</div>
-  <div>{{ form.email.label }} {{ form.email() }}</div>
-  <div>{{ form.name.label }} {{ form.name() }}</div>
-  <div>{{ form.unit_number.label }} {{ form.unit_number() }}</div>
-  <div>{{ form.phone_number.label }} {{ form.phone_number() }}</div>
+    <div class="mb-3">
+      {{ form.username.label(class="form-label") }}
+      {{ form.username(class="form-control") }}
+    </div>
 
-  <div>{{ form.submit(class="btn btn-success") }}</div>
-</form>
+    <div class="mb-3">
+      {{ form.password.label(class="form-label") }}
+      {{ form.password(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.email.label(class="form-label") }}
+      {{ form.email(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.name.label(class="form-label") }}
+      {{ form.name(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.unit_number.label(class="form-label") }}
+      {{ form.unit_number(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.phone_number.label(class="form-label") }}
+      {{ form.phone_number(class="form-control") }}
+    </div>
+
+    <div class="d-grid">
+      {{ form.submit(class="btn btn-primary") }}
+    </div>
+  </form>
+
+  <div class="mt-3 text-center">
+    <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
+  </div>
+</div>
+{% endblock %}
