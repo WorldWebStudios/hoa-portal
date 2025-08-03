@@ -43,7 +43,7 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user)
             flash('Logged in successfully.', 'success')
-            return redirect(url_for('index'))  # Or your dashboard/home
+            return redirect(url_for('admin_dashboard'))
         flash('Invalid username or password.', 'danger')
     return render_template('login.html', form=form)
 
