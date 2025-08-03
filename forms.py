@@ -11,3 +11,8 @@ class RegistrationForm(FlaskForm):
     unit_number = StringField('Unit Number (if applicable)', validators=[Length(max=50)])
     phone_number = StringField('Phone Number', validators=[Length(max=20)])
     submit = SubmitField('Register')
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=150)])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Login')
